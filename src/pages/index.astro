@@ -1,14 +1,84 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Terminal from '../components/Terminal.astro';
+import SectionHead from '../components/SectionHead.astro';
+import PixelIcon from '../components/PixelIcon.astro';
+import type { IconName } from '../components/pixel-matrices';
+
+const pixels: { name: IconName; label: string }[] = [
+  { name: 'chip', label: 'STM32' },
+  { name: 'terminal', label: 'tty' },
+  { name: 'keyboard', label: 'kbd' },
+  { name: 'coffee', label: 'coffee' },
+  { name: 'board', label: 'pcb' },
+  { name: 'led', label: 'LED' },
+];
 ---
 <BaseLayout title="tomsawyer@blog:~$">
-  <h1 class="hello">hello, world</h1>
-  <p>这里是骨架测试。导航、页脚、字体、磷光绿都已就位。</p>
+  <Terminal title="tomsawyer@blog: ~">
+    <div class="t-line"><span class="t-prompt">$</span> who am i</div>
+    <div class="t-out">tomsawyer —— 一个想用代码让物理世界动起来的人</div>
+    <div class="t-line"><span class="t-prompt">$</span> <span class="t-cursor"></span></div>
+  </Terminal>
+
+  <div class="pixel-row">
+    {pixels.map((p) => (
+      <div class="pixel-item">
+        <PixelIcon name={p.name} />
+        <span class="pixel-label">{p.label}</span>
+      </div>
+    ))}
+  </div>
+
+  <SectionHead cmd="ls ~/posts" comment="最新文章" />
+  <p class="placeholder"># M4 之后这里会有文章列表</p>
 </BaseLayout>
 
 <style>
-  .hello {
-    color: var(--ink);
+  .t-line {
+    color: var(--term-text);
+  }
+  .t-prompt {
+    color: var(--accent);
+    font-weight: 700;
+    margin-right: 6px;
+  }
+  .t-out {
+    color: var(--term-dim);
+  }
+  .t-cursor {
+    display: inline-block;
+    width: 0.6em;
+    height: 1.1em;
+    background: var(--accent);
+    vertical-align: text-bottom;
+    animation: blink 1s steps(1) infinite;
+  }
+  @keyframes blink {
+    50% {
+      opacity: 0;
+    }
+  }
+  .pixel-row {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin: 26px 0 6px;
+  }
+  .pixel-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  .pixel-label {
     font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .placeholder {
+    font-family: var(--font-mono);
+    color: var(--faint);
   }
 </style>

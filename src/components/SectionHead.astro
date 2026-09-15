@@ -1,0 +1,35 @@
+---
+interface Props {
+  cmd: string;
+  comment: string;
+}
+
+const { cmd, comment } = Astro.props;
+---
+<div class="section-head">
+  <span class="prompt">$</span>
+  <span class="cmd">{cmd}</span>
+  <span class="comment"># {comment}</span>
+</div>
+
+<style>
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    font-family: var(--font-mono);
+    font-size: 13.5px;
+    margin: 48px 0 18px;
+  }
+  .prompt {
+    color: var(--accent);
+    font-weight: 700;
+  }
+  .cmd {
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .comment {
+    color: var(--faint);
+  }
+</style>

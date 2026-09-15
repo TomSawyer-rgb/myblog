@@ -1,0 +1,40 @@
+---
+import { MATRICES, type IconName } from './pixel-matrices';
+
+interface Props {
+  name: IconName;
+}
+
+const { name } = Astro.props;
+const matrix = MATRICES[name];
+if (!matrix) throw new Error(`未知像素图标: ${name}`);
+
+const cells: { x: number; y: number; accent: boolean }[] = [];
+matrix.forEach((row, y) => {
+  [...row].forEach((ch, x) => {
+    if (ch === 'X') cells.push({ x, y, accent: false });
+    else if (ch === '.') cells.push({ x, y, accent: true });
+  });
+});
+---
+<svg
+  class="pixel-icon"
+  viewBox="0 0 15 15"
+  shape-rendering="crispEdges"
+  fill="currentColor"
+  aria-hidden="true"
+>
+  {cells.map((c) => (
+    <rect x={c.x} y={c.y} width="1" height="1" class={c.accent ? 'pix-accent' : undefined} />
+  ))}
+</svg>
+
+<style>
+  .pixel-icon {
+    width: 30px;
+    height: 30px;
+  }
+  .pix-accent {
+    fill: var(--accent);
+  }
+</style>
