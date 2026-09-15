@@ -1,14 +1,14 @@
 ---
-const user = 'tomsawyer';
+import BaseLayout from '../layouts/BaseLayout.astro';
 ---
+<BaseLayout title="tomsawyer@blog:~$">
+  <h1 class="hello">hello, world</h1>
+  <p>这里是骨架测试。导航、页脚、字体、磷光绿都已就位。</p>
+</BaseLayout>
 
-<html lang="zh-CN">
-	<head>
-		<meta charset="utf-8" />
-		<title>{user}@blog:~$</title>
-	</head>
-	<body>
-		<h1>{user}@blog:~$</h1>
-		<p>hello, world!</p>
-	</body>
-</html>
+<style>
+  .hello {
+    color: var(--ink);
+    font-family: var(--font-mono);
+  }
+</style>

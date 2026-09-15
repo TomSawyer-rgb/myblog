@@ -1,0 +1,45 @@
+:root {
+  /* 纸面 */
+  --bg: #fafafa;        /* 页面底色：纸感米白 */
+  --ink: #161616;       /* 标题墨黑 */
+  --text: #2a2a2a;      /* 正文 */
+  --muted: #777777;     /* 次要文字 */
+  --faint: #9a9a9a;
+  --line: #e8e8e8;      /* 分隔线 */
+  --num: #e6e6e6;       /* 超大编号，hover 转墨黑 */
+  /* 强调 */
+  --accent: #21c463;    /* 磷光绿：全站唯一强调色 */
+  --accent-dark: #0f8a4a;
+  --amber: #d9a03a;     /* 仅用于"进行中"状态、代码字符串 */
+  /* 终端窗口 */
+  --term-bg: #0d0d0d;
+  --term-line: #242424;
+  --term-text: #d7d7d7;
+  --term-dim: #8a8a8a;
+  /* 字体 */
+  --font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, Consolas, monospace;
+  --font-sans: 'Noto Sans SC', -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 15.5px;
+  line-height: 1.9;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: rgb(33 196 99 / 18%);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
