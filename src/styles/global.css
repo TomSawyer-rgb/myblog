@@ -1,4 +1,5 @@
 :root {
+  color-scheme: light;
   /* 纸面 */
   --bg: #fafafa;        /* 页面底色：纸感米白 */
   --ink: #161616;       /* 标题墨黑 */
@@ -19,6 +20,25 @@
   /* 字体 */
   --font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, Consolas, monospace;
   --font-sans: 'Noto Sans SC', -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+}
+
+/* 深夜形态：同一套语义变量换一组取值，组件零改动 */
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #0e100e;
+  --ink: #eaede6;
+  --text: #c6cabe;
+  --muted: #8f948a;
+  --faint: #676c62;
+  --line: #232720;
+  --num: #262b22;
+  --accent: #35d974;
+  --accent-dark: #8ff0b3;  /* 深色底上 hover 要提亮而不是压暗 */
+  --amber: #e2b45f;
+  --term-bg: #141814;
+  --term-line: #2a2f28;
+  --term-text: #d7d7d7;
+  --term-dim: #8a8a8a;
 }
 
 * {

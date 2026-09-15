@@ -1,0 +1,81 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SectionHead from '../../components/SectionHead.astro';
+import PostCard from '../../components/PostCard.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('blog')).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+);
+
+const categories = ['全部', ...new Set(posts.map((p) => p.data.category))];
+---
+<BaseLayout title="博客归档 · tomsawyer@blog:~$">
+  <SectionHead cmd="ls -la ~/blog" comment="博客归档 · 按时间倒序" />
+  <div class="cat-tabs" role="tablist" aria-label="文章分类筛选">
+    {categories.map((c, i) => (
+      <button type="button" class:list={['cat-tab', { active: i === 0 }]} data-cat={c}>
+        {c}
+      </button>
+    ))}
+  </div>
+  <div class="post-list">
+    {posts.map((p, i) => (
+      <div class="post-entry" data-cat={p.data.category}>
+        <PostCard
+          num={i + 1}
+          slug={p.id}
+          title={p.data.title}
+          date={p.data.date}
+          category={p.data.category}
+          summary={p.data.summary}
+        />
+      </div>
+    ))}
+  </div>
+</BaseLayout>
+
+<script>
+  const tabs = document.querySelectorAll<HTMLButtonElement>('.cat-tab');
+  const entries = document.querySelectorAll<HTMLElement>('.post-entry');
+
+  tabs.forEach((tab) => {
+    tab.addEventListener('click', () => {
+      tabs.forEach((t) => t.classList.remove('active'));
+      tab.classList.add('active');
+      const cat = tab.dataset.cat ?? '全部';
+      entries.forEach((e) => {
+        e.style.display = cat === '全部' || e.dataset.cat === cat ? '' : 'none';
+      });
+    });
+  });
+</script>
+
+<style>
+  .cat-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 22px 0 8px;
+  }
+  .cat-tab {
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    color: var(--muted);
+    background: none;
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    padding: 3px 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .cat-tab:hover {
+    color: var(--ink);
+    border-color: var(--muted);
+  }
+  .cat-tab.active {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--bg);
+  }
+</style>

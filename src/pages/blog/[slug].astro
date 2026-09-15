@@ -1,0 +1,189 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection, render } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+}
+
+type Props = { post: CollectionEntry<'blog'> };
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const d = post.data;
+const dateStr = d.date.toISOString().slice(0, 10).replace(/-/g, '.');
+---
+<BaseLayout title={`${d.title} · tomsawyer@blog:~$`} description={d.summary}>
+  <article class="post">
+    <a href="/blog/" class="back-link"><span class="arrow">←</span> cd ~/blog 返回列表</a>
+
+    <header class="post-header">
+      <div class="post-meta">
+        <span class="post-date">{dateStr}</span>
+        <span class="post-tag">{d.category}</span>
+      </div>
+      <h1 class="post-title">{d.title}</h1>
+      <p class="post-lead">{d.summary}</p>
+    </header>
+
+    <div class="post-content">
+      <Content />
+    </div>
+
+    <footer class="post-footer">
+      <div class="post-meta">
+        <span class="post-date">{dateStr}</span>
+        <span class="post-tag">{d.category}</span>
+      </div>
+      <a href="/blog/" class="back-link"><span class="arrow">←</span> cd ~/blog 返回列表</a>
+    </footer>
+  </article>
+</BaseLayout>
+
+<style>
+  .post {
+    max-width: 680px;
+    margin: 0 auto;
+    padding-bottom: 30px;
+  }
+  .back-link {
+    display: inline-block;
+    margin: 34px 0 8px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--muted);
+    transition: color 0.2s;
+  }
+  .back-link:hover {
+    color: var(--accent-dark);
+  }
+  .arrow {
+    margin-right: 6px;
+  }
+  .post-header {
+    padding: 18px 0 6px;
+    border-bottom: 1px solid var(--line);
+  }
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+  }
+  .post-date {
+    color: var(--muted);
+  }
+  .post-tag {
+    color: var(--accent-dark);
+    border: 1px solid var(--accent);
+    border-radius: 3px;
+    padding: 0 8px;
+    font-size: 11px;
+    line-height: 1.7;
+  }
+  .post-title {
+    margin: 14px 0 10px;
+    font-size: 26px;
+    line-height: 1.4;
+    color: var(--ink);
+  }
+  .post-lead {
+    margin: 0 0 22px;
+    font-size: 14.5px;
+    color: var(--muted);
+  }
+  .post-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-top: 44px;
+    padding-top: 22px;
+    border-top: 1px solid var(--line);
+  }
+  /* <Content /> 渲染出的元素不在本组件模板里，作用域样式够不到，必须用 :global */
+  .post-content {
+    font-size: 15.5px;
+    line-height: 1.95;
+    color: var(--text);
+  }
+  .post-content :global(h1),
+  .post-content :global(h2),
+  .post-content :global(h3),
+  .post-content :global(h4) {
+    margin: 2em 0 0.7em;
+    color: var(--ink);
+    line-height: 1.4;
+  }
+  .post-content :global(h2) {
+    font-size: 20px;
+  }
+  .post-content :global(h3) {
+    font-size: 17px;
+  }
+  .post-content :global(h4) {
+    font-size: 15.5px;
+  }
+  .post-content :global(p) {
+    margin: 0 0 1.2em;
+  }
+  .post-content :global(a) {
+    color: var(--accent-dark);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .post-content :global(a:hover) {
+    color: var(--accent);
+  }
+  .post-content :global(strong) {
+    color: var(--ink);
+  }
+  .post-content :global(ul),
+  .post-content :global(ol) {
+    margin: 0 0 1.2em;
+    padding-left: 1.5em;
+  }
+  .post-content :global(li) {
+    margin: 0.3em 0;
+  }
+  .post-content :global(blockquote) {
+    margin: 1.4em 0;
+    padding: 2px 0 2px 16px;
+    border-left: 3px solid var(--accent);
+    color: var(--muted);
+  }
+  .post-content :global(code) {
+    font-family: var(--font-mono);
+    font-size: 0.88em;
+    background: var(--term-bg);
+    color: var(--term-text);
+    border-radius: 4px;
+    padding: 2px 6px;
+  }
+  .post-content :global(.astro-code) {
+    margin: 1.6em 0;
+    padding: 16px 18px;
+    border: 1px solid var(--term-line);
+    border-radius: 8px;
+    font-size: 13px;
+    line-height: 1.75;
+    overflow-x: auto;
+  }
+  .post-content :global(.astro-code code) {
+    background: none;
+    padding: 0;
+    font-size: inherit;
+    color: inherit;
+  }
+  .post-content :global(img) {
+    max-width: 100%;
+    border-radius: 6px;
+  }
+  .post-content :global(hr) {
+    border: none;
+    border-top: 1px solid var(--line);
+    margin: 2.4em 0;
+  }
+</style>

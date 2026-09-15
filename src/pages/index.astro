@@ -3,11 +3,13 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Terminal from '../components/Terminal.astro';
 import SectionHead from '../components/SectionHead.astro';
 import PixelIcon from '../components/PixelIcon.astro';
+import PostCard from '../components/PostCard.astro';
 import type { IconName } from '../components/pixel-matrices';
 import { getCollection } from 'astro:content';
 
 const posts = await getCollection('blog');
 posts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const latest = posts.slice(0, 5);
 
 const pixels: { name: IconName; label: string }[] = [
   { name: 'chip', label: 'STM32' },
@@ -20,9 +22,12 @@ const pixels: { name: IconName; label: string }[] = [
 ---
 <BaseLayout title="tomsawyer@blog:~$">
   <Terminal title="tomsawyer@blog: ~">
-    <div class="t-line"><span class="t-prompt">$</span> who am i</div>
-    <div class="t-out">tomsawyer —— 一个想用代码让物理世界动起来的人</div>
-    <div class="t-line"><span class="t-prompt">$</span> <span class="t-cursor"></span></div>
+    <div class="t-line"><span class="t-prompt">$</span> whoami</div>
+    <div class="t-out">我是tomsawyer —— 一个忧郁的boy</div>
+    <div class="t-line"><span class="t-prompt">$</span> why build a blog?</div>
+    <div class="t-out">因为我想记录我的思考和学习过程。</div>
+    <div class="t-line"><span class="t-prompt">$</span> what plan to write here in the future?</div>
+    <div class="t-out">不知道，随便写写吧！</div>
   </Terminal>
 
   <div class="pixel-row">
@@ -35,13 +40,21 @@ const pixels: { name: IconName; label: string }[] = [
   </div>
 
   <SectionHead cmd="ls ~/posts" comment="最新文章" />
-  <ul class="temp-posts">
-    {posts.map((p) => (
-      <li>
-        {p.data.date.toISOString().slice(0, 10)} · {p.data.title} · {p.data.category}
-      </li>
+  <div class="post-list">
+    {latest.map((p, i) => (
+      <PostCard
+        num={i + 1}
+        slug={p.id}
+        title={p.data.title}
+        date={p.data.date}
+        category={p.data.category}
+        summary={p.data.summary}
+      />
     ))}
-  </ul>
+  </div>
+  <div class="list-more">
+    <a href="/blog/" class="more-link">cd ~/blog <span class="arrow">→</span> 查看全部文章</a>
+  </div>
 </BaseLayout>
 
 <style>
@@ -87,14 +100,17 @@ const pixels: { name: IconName; label: string }[] = [
     font-size: 11px;
     color: var(--muted);
   }
-  .temp-posts {
-    font-family: var(--font-mono);
-    font-size: 13.5px;
-    color: var(--text);
-    line-height: 2.1;
+  .list-more {
+    padding: 26px 10px;
+    text-align: right;
   }
-  .placeholder {
+  .more-link {
     font-family: var(--font-mono);
-    color: var(--faint);
+    font-size: 13px;
+    color: var(--muted);
+    transition: color 0.2s;
+  }
+  .more-link:hover {
+    color: var(--accent-dark);
   }
 </style>

@@ -1,0 +1,87 @@
+---
+interface Props {
+  num: number;
+  slug: string;
+  title: string;
+  date: Date;
+  category: string;
+  summary: string;
+}
+
+const { num, slug, title, date, category, summary } = Astro.props;
+const numStr = String(num).padStart(2, '0');
+const dateStr = date.toISOString().slice(0, 10).replace(/-/g, '.');
+---
+<a href={`/blog/${slug}/`} class="post-item">
+  <span class="post-num">{numStr}</span>
+  <span class="post-body">
+    <span class="post-meta">
+      <span class="post-date">{dateStr}</span>
+      <span class="post-tag">{category}</span>
+    </span>
+    <span class="post-title">{title}</span>
+    <span class="post-summary">{summary}</span>
+  </span>
+</a>
+
+<style>
+  .post-item {
+    display: flex;
+    gap: 18px;
+    padding: 26px 10px;
+    border-bottom: 1px solid var(--line);
+  }
+  .post-num {
+    font-family: var(--font-mono);
+    font-size: 34px;
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--num);
+    transition: color 0.2s;
+  }
+  .post-item:hover .post-num {
+    color: var(--ink);
+  }
+  .post-body {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+  }
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+  }
+  .post-date {
+    color: var(--muted);
+  }
+  .post-tag {
+    color: var(--accent-dark);
+    border: 1px solid var(--accent);
+    border-radius: 3px;
+    padding: 0 8px;
+    font-size: 11px;
+    line-height: 1.7;
+    transition: all 0.2s;
+  }
+  .post-item:hover .post-tag {
+    background: var(--accent);
+    color: var(--term-bg);
+  }
+  .post-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--ink);
+    transition: color 0.2s;
+  }
+  .post-item:hover .post-title {
+    color: var(--accent-dark);
+  }
+  .post-summary {
+    font-size: 13.5px;
+    color: var(--muted);
+  }
+</style>
