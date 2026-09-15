@@ -4,6 +4,10 @@ import Terminal from '../components/Terminal.astro';
 import SectionHead from '../components/SectionHead.astro';
 import PixelIcon from '../components/PixelIcon.astro';
 import type { IconName } from '../components/pixel-matrices';
+import { getCollection } from 'astro:content';
+
+const posts = await getCollection('blog');
+posts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 
 const pixels: { name: IconName; label: string }[] = [
   { name: 'chip', label: 'STM32' },
@@ -31,7 +35,13 @@ const pixels: { name: IconName; label: string }[] = [
   </div>
 
   <SectionHead cmd="ls ~/posts" comment="最新文章" />
-  <p class="placeholder"># M4 之后这里会有文章列表</p>
+  <ul class="temp-posts">
+    {posts.map((p) => (
+      <li>
+        {p.data.date.toISOString().slice(0, 10)} · {p.data.title} · {p.data.category}
+      </li>
+    ))}
+  </ul>
 </BaseLayout>
 
 <style>
@@ -76,6 +86,12 @@ const pixels: { name: IconName; label: string }[] = [
     font-family: var(--font-mono);
     font-size: 11px;
     color: var(--muted);
+  }
+  .temp-posts {
+    font-family: var(--font-mono);
+    font-size: 13.5px;
+    color: var(--text);
+    line-height: 2.1;
   }
   .placeholder {
     font-family: var(--font-mono);
