@@ -1,0 +1,137 @@
+---
+import Terminal from './Terminal.astro';
+
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+<Terminal title={title}>
+  <div class="hero-typer">
+    <slot />
+  </div>
+</Terminal>
+
+<script>
+  const TYPE_MS = 42;
+  const LINE_PAUSE = 260;
+  const OUT_STAGGER_MS = 90;
+
+  interface OutItem {
+    kind: 'out';
+    text: string;
+    accent: boolean;
+  }
+  interface CmdItem {
+    kind: 'cmd';
+    text: string;
+  }
+  type SeqItem = CmdItem | OutItem;
+
+  function makeOut(text: string, accent: boolean): HTMLElement {
+    const div = document.createElement('div');
+    div.className = accent ? 't-line t-out-accent' : 't-line t-out';
+    div.textContent = text;
+    return div;
+  }
+
+  function makePromptLine(): { line: HTMLElement; text: HTMLElement; cursor: HTMLElement } {
+    const line = document.createElement('div');
+    line.className = 't-line t-cmd';
+    const prompt = document.createElement('span');
+    prompt.className = 't-prompt';
+    prompt.textContent = '$';
+    const text = document.createElement('span');
+    text.className = 't-cmd-text';
+    const cursor = document.createElement('span');
+    cursor.className = 't-cursor';
+    line.append(prompt, text, cursor);
+    return { line, text, cursor };
+  }
+
+  function makeEndPrompt(): HTMLElement {
+    const line = document.createElement('div');
+    line.className = 't-line t-cmd';
+    const prompt = document.createElement('span');
+    prompt.className = 't-prompt';
+    prompt.textContent = '$';
+    const cursor = document.createElement('span');
+    cursor.className = 't-cursor';
+    line.append(prompt, cursor);
+    return line;
+  }
+
+  function typewriter(body: HTMLElement, items: SeqItem[]): void {
+    const scroll = (): void => {
+      body.scrollTop = body.scrollHeight;
+    };
+    let li = 0;
+
+    function typeLine(): void {
+      const item = items[li];
+      if (!item) {
+        body.appendChild(makeEndPrompt());
+        scroll();
+        return;
+      }
+
+      if (item.kind === 'out') {
+        body.appendChild(makeOut(item.text, item.accent));
+        scroll();
+        li += 1;
+        window.setTimeout(typeLine, OUT_STAGGER_MS);
+        return;
+      }
+
+      const { line, text, cursor } = makePromptLine();
+      body.appendChild(line);
+      scroll();
+      let ci = 0;
+
+      function tick(): void {
+        ci += 1;
+        text.textContent = item.text.slice(0, ci);
+        scroll();
+        if (ci < item.text.length) {
+          window.setTimeout(tick, TYPE_MS);
+          return;
+        }
+        window.setTimeout(() => {
+          cursor.remove();
+          li += 1;
+          window.setTimeout(typeLine, LINE_PAUSE);
+        }, LINE_PAUSE);
+      }
+      window.setTimeout(tick, TYPE_MS);
+    }
+
+    typeLine();
+  }
+
+  function initHero(): void {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    document.querySelectorAll<HTMLElement>('.hero-typer').forEach((body) => {
+      // 插槽里的静态标记是唯一数据源：解析 → 清空 → 逐字重打
+      const items: SeqItem[] = [];
+      Array.from(body.children).forEach((el) => {
+        if (el.classList.contains('t-cmd')) {
+          items.push({ kind: 'cmd', text: el.querySelector('.t-cmd-text')?.textContent ?? '' });
+        } else if (el.classList.contains('t-out') || el.classList.contains('t-out-accent')) {
+          items.push({
+            kind: 'out',
+            text: el.textContent ?? '',
+            accent: el.classList.contains('t-out-accent'),
+          });
+        }
+      });
+      if (items.length === 0) return;
+
+      body.textContent = '';
+      typewriter(body, items);
+    });
+  }
+
+  initHero();
+</script>

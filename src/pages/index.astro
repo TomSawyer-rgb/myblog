@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Terminal from '../components/Terminal.astro';
+import TypeHero from '../components/TypeHero.astro';
 import SectionHead from '../components/SectionHead.astro';
 import PixelIcon from '../components/PixelIcon.astro';
 import PostCard from '../components/PostCard.astro';
@@ -21,14 +21,14 @@ const pixels: { name: IconName; label: string }[] = [
 ];
 ---
 <BaseLayout title="tomsawyer@blog:~$">
-  <Terminal title="tomsawyer@blog: ~">
-    <div class="t-line"><span class="t-prompt">$</span> whoami</div>
-    <div class="t-out">我是tomsawyer —— 一个忧郁的boy</div>
-    <div class="t-line"><span class="t-prompt">$</span> why build a blog?</div>
-    <div class="t-out">因为我想记录我的思考和学习过程。</div>
-    <div class="t-line"><span class="t-prompt">$</span> what plan to write here in the future?</div>
-    <div class="t-out">不知道，随便写写吧！</div>
-  </Terminal>
+  <TypeHero title="tomsawyer@blog: ~">
+    <div class="t-line t-cmd"><span class="t-prompt">$</span><span class="t-cmd-text">whoami</span></div>
+    <div class="t-line t-out-accent">我是tomsawyer —— 一个忧郁的boy</div>
+    <div class="t-line t-cmd"><span class="t-prompt">$</span><span class="t-cmd-text">why build a blog?</span></div>
+    <div class="t-line t-out">因为我想记录我的思考和学习过程。</div>
+    <div class="t-line t-cmd"><span class="t-prompt">$</span><span class="t-cmd-text">what plan to write here in the future?</span></div>
+    <div class="t-line t-out">不知道，随便写写吧！</div>
+  </TypeHero>
 
   <div class="pixel-row">
     {pixels.map((p) => (
@@ -58,30 +58,6 @@ const pixels: { name: IconName; label: string }[] = [
 </BaseLayout>
 
 <style>
-  .t-line {
-    color: var(--term-text);
-  }
-  .t-prompt {
-    color: var(--accent);
-    font-weight: 700;
-    margin-right: 6px;
-  }
-  .t-out {
-    color: var(--term-dim);
-  }
-  .t-cursor {
-    display: inline-block;
-    width: 0.6em;
-    height: 1.1em;
-    background: var(--accent);
-    vertical-align: text-bottom;
-    animation: blink 1s steps(1) infinite;
-  }
-  @keyframes blink {
-    50% {
-      opacity: 0;
-    }
-  }
   .pixel-row {
     display: flex;
     justify-content: space-between;

@@ -1,0 +1,45 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Terminal from '../components/Terminal.astro';
+---
+<BaseLayout title="404 · tomsawyer@blog:~$">
+  <section class="nf">
+    <div class="nf-code">404</div>
+    <Terminal title="tomsawyer@blog: ~">
+      <div class="t-line t-cmd"><span class="t-prompt">$</span><span class="t-cmd-text">cd /未知页面</span></div>
+      <div class="t-line t-out">bash: cd: 这个页面不存在: No such file or directory</div>
+      <div class="t-line t-cmd"><span class="t-prompt">$</span><span class="t-cmd-text">cd ~</span></div>
+      <div class="t-line t-out-accent">好，带你回首页 →</div>
+      <div class="t-line t-cmd"><span class="t-prompt">$</span><span class="t-cursor"></span></div>
+    </Terminal>
+    <a href="/" class="nf-back"><span class="arrow">←</span> cd ~ 回到首页</a>
+  </section>
+</BaseLayout>
+
+<style>
+  .nf {
+    padding: 30px 0 40px;
+  }
+  .nf-code {
+    font-family: var(--font-mono);
+    font-size: 84px;
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--num);
+    user-select: none;
+  }
+  .nf-back {
+    display: inline-block;
+    margin-top: 26px;
+    font-family: var(--font-mono);
+    font-size: 13.5px;
+    color: var(--muted);
+    transition: color 0.2s;
+  }
+  .nf-back:hover {
+    color: var(--accent-dark);
+  }
+  .arrow {
+    margin-right: 6px;
+  }
+</style>

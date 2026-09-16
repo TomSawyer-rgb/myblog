@@ -53,6 +53,9 @@ body {
   font-size: 15.5px;
   line-height: 1.9;
   -webkit-font-smoothing: antialiased;
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease;
 }
 
 ::selection {
@@ -62,4 +65,51 @@ body {
 a {
   color: inherit;
   text-decoration: none;
+}
+
+/* ---------- 终端命令行内容 ----------
+   打字机脚本运行时生成的元素没有 scoped 属性，
+   因此这里必须是全局样式（静态终端同样复用） */
+.t-line {
+  color: var(--term-text);
+}
+.t-cmd {
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+.t-prompt {
+  margin-right: 8px;
+  color: var(--accent);
+  font-weight: 700;
+}
+.t-cmd-text {
+  white-space: pre-wrap;
+}
+.t-out {
+  color: var(--term-dim);
+}
+.t-out-accent {
+  color: var(--accent);
+}
+.t-cursor {
+  display: inline-block;
+  width: 0.6em;
+  height: 1.05em;
+  margin-left: 2px;
+  vertical-align: text-bottom;
+  background: var(--accent);
+  animation: t-blink 1s steps(1) infinite;
+}
+@keyframes t-blink {
+  50% {
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .t-cursor {
+    animation: none;
+  }
+  body {
+    transition: none;
+  }
 }

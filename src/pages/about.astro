@@ -1,0 +1,93 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Terminal from '../components/Terminal.astro';
+import SectionHead from '../components/SectionHead.astro';
+import PixelIcon, { type IconName } from '../components/PixelIcon.astro';
+
+// TODO: 联系方式补上你自己的 email / github
+const PIXEL_ITEMS: { icon: IconName; label: string }[] = [
+  { icon: 'terminal', label: 'tty' },
+  { icon: 'keyboard', label: 'code' },
+  { icon: 'coffee', label: 'coffee' },
+  { icon: 'chip', label: 'hack' },
+  { icon: 'board', label: 'diy' },
+  { icon: 'led', label: 'dream' },
+];
+---
+<BaseLayout title="关于 · tomsawyer@blog:~$">
+  <section class="about">
+    <Terminal title="tomsawyer@blog: ~/about">
+      <div class="t-line t-cmd"><span class="t-prompt">$</span><span class="t-cmd-text">whoami</span></div>
+      <div class="t-line t-out-accent">tomsawyer</div>
+      <div class="t-line t-cmd"><span class="t-prompt">$</span><span class="t-cmd-text">cat about.txt</span></div>
+      <div class="t-line t-out">一个忧郁 boy。</div>
+      <div class="t-line t-out">这个世界很复杂——我想逃离，但也想了解。</div>
+      <div class="t-line t-out">Because my dream is around the world!!!</div>
+      <div class="t-line t-cmd"><span class="t-prompt">$</span><span class="t-cmd-text">uname -a</span></div>
+      <div class="t-line t-out">myblog v0.1 · Astro · 纯静态 · 磷光绿与像素</div>
+      <div class="t-line t-cmd"><span class="t-prompt">$</span><span class="t-cursor"></span></div>
+    </Terminal>
+
+    <div class="about-section">
+      <SectionHead cmd="cat now.md" comment="现在在做" />
+      <Terminal title="tomsawyer@blog: ~/now">
+        <div class="t-line t-cmd"><span class="t-prompt">$</span><span class="t-cmd-text">cat now.md</span></div>
+        <div class="t-line t-out">- 从零手写这个博客（Astro + 终端风设计系统）</div>
+        <div class="t-line t-out">- 记录思考和学习过程</div>
+        <div class="t-line t-out-accent"># 下一行留给你：正在做的第三件事</div>
+        <div class="t-line t-cmd"><span class="t-prompt">$</span><span class="t-cursor"></span></div>
+      </Terminal>
+    </div>
+
+    <div class="about-section">
+      <SectionHead cmd="./contact --info" comment="联系方式" />
+      <Terminal title="tomsawyer@blog: ~/contact">
+        <div class="t-line t-cmd"><span class="t-prompt">$</span><span class="t-cmd-text">cat contact.txt</span></div>
+        <div class="t-line t-out"><span class="contact-key">email</span>  <span class="contact-muted"># 待补充（编辑 src/pages/about.astro）</span></div>
+        <div class="t-line t-out"><span class="contact-key">github</span> <span class="contact-muted"># 待补充</span></div>
+        <div class="t-line t-cmd"><span class="t-prompt">$</span><span class="t-cursor"></span></div>
+      </Terminal>
+    </div>
+
+    <div class="pixel-row">
+      {PIXEL_ITEMS.map((p) => (
+        <div class="pixel-item">
+          <PixelIcon name={p.icon} />
+          <span class="pixel-label">{p.label}</span>
+        </div>
+      ))}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .about-section {
+    margin-top: 46px;
+  }
+  .contact-key {
+    display: inline-block;
+    min-width: 7ch;
+    color: var(--term-text);
+  }
+  .contact-muted {
+    color: var(--term-dim);
+  }
+  .pixel-row {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin: 46px 0 10px;
+  }
+  .pixel-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  .pixel-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--muted);
+  }
+</style>

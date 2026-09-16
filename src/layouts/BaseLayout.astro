@@ -14,6 +14,8 @@ const navLinks = [
   { href: '/about/', label: '关于' },
 ];
 const current = Astro.url.pathname;
+const isActive = (href: string): boolean =>
+  href === '/' ? current === '/' : current === href || current.startsWith(href);
 ---
 <!doctype html>
 <html lang="zh-CN">
@@ -22,6 +24,21 @@ const current = Astro.url.pathname;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <!-- 防闪烁（FOUC）：首帧渲染前就把主题定死，此脚本必须保持内联 -->
+    <script is:inline>
+      (() => {
+        try {
+          const v = localStorage.getItem('theme');
+          const mode = v === 'light' || v === 'dark' ? v : 'system';
+          const dark =
+            mode === 'dark' ||
+            (mode === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+        } catch {
+          /* 存储不可用时跟随默认 */
+        }
+      })();
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.cn" />
     <link rel="preconnect" href="https://fonts.gstatic.cn" crossorigin />
     <link
@@ -36,24 +53,72 @@ const current = Astro.url.pathname;
         <a href="/" class="logo">
           <span class="logo-user">tomsawyer@blog</span><span class="logo-rest">:~$</span>
         </a>
-        <nav class="site-nav">
-          {navLinks.map((link) => (
-            <a href={link.href} class:list={['nav-link', { active: current === link.href }]}>
-              {link.label}
-            </a>
-          ))}
-        </nav>
+        <div class="header-right">
+          <nav class="site-nav">
+            {navLinks.map((link) => (
+              <a href={link.href} class:list={['nav-link', { active: isActive(link.href) }]}>
+                {link.label}
+              </a>
+            ))}
+          </nav>
+          <button type="button" id="theme-toggle" class="theme-toggle" aria-label="切换主题（浅色 → 深色 → 跟随系统）">
+            theme: auto
+          </button>
+        </div>
       </header>
       <main class="site-main">
         <slot />
       </main>
       <footer class="site-footer">
         <span class="footer-prompt">$</span>
-        <span>echo "保持热爱，持续点灯" — tomsawyer 的终端博客</span>
+        <span>echo "保持热爱，持续点灯" — tomsawyer 的终端博客 · <a href="/rss.xml" class="footer-link">rss</a></span>
       </footer>
     </div>
   </body>
 </html>
+
+<script>
+  type Mode = 'light' | 'dark' | 'system';
+  const ORDER: Mode[] = ['light', 'dark', 'system'];
+  const KEY = 'theme';
+
+  const btn = document.getElementById('theme-toggle');
+
+  function getMode(): Mode {
+    try {
+      const v = localStorage.getItem(KEY);
+      if (v === 'light' || v === 'dark') return v;
+    } catch {
+      /* ignore */
+    }
+    return 'system';
+  }
+
+  function apply(mode: Mode): void {
+    const dark =
+      mode === 'dark' ||
+      (mode === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+    if (btn) btn.textContent = `theme: ${mode}`;
+  }
+
+  btn?.addEventListener('click', () => {
+    const next = ORDER[(ORDER.indexOf(getMode()) + 1) % ORDER.length] ?? 'system';
+    try {
+      localStorage.setItem(KEY, next);
+    } catch {
+      /* ignore */
+    }
+    apply(next);
+  });
+
+  // 跟随系统模式下，系统切换主题要实时响应
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+    if (getMode() === 'system') apply('system');
+  });
+
+  apply(getMode());
+</script>
 
 <style>
   .site-wrap {
@@ -71,14 +136,21 @@ const current = Astro.url.pathname;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 12px;
     padding: 28px 0 22px;
     border-bottom: 1px solid var(--line);
+  }
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 18px;
   }
   .logo {
     font-family: var(--font-mono);
     font-weight: 700;
     font-size: 15px;
     color: var(--ink);
+    white-space: nowrap;
   }
   .logo-rest {
     color: var(--accent);
@@ -99,6 +171,22 @@ const current = Astro.url.pathname;
   .nav-link.active {
     color: var(--accent);
   }
+  .theme-toggle {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--muted);
+    background: none;
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    padding: 2px 9px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s;
+  }
+  .theme-toggle:hover {
+    color: var(--accent-dark);
+    border-color: var(--accent);
+  }
   .site-footer {
     display: flex;
     gap: 8px;
@@ -107,5 +195,22 @@ const current = Astro.url.pathname;
     font-family: var(--font-mono);
     font-size: 12.5px;
     color: var(--faint);
+  }
+  .footer-link {
+    transition: color 0.2s;
+  }
+  .footer-link:hover {
+    color: var(--accent-dark);
+  }
+  @media (max-width: 640px) {
+    .site-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 14px;
+    }
+    .header-right {
+      width: 100%;
+      justify-content: space-between;
+    }
   }
 </style>
