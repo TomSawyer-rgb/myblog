@@ -4,6 +4,7 @@ import Terminal from '../components/Terminal.astro';
 import SectionHead from '../components/SectionHead.astro';
 import PixelIcon, { type IconName } from '../components/PixelIcon.astro';
 
+
 // TODO: 联系方式补上你自己的 email / github
 const PIXEL_ITEMS: { icon: IconName; label: string }[] = [
   { icon: 'terminal', label: 'tty' },
@@ -32,7 +33,7 @@ const PIXEL_ITEMS: { icon: IconName; label: string }[] = [
       <SectionHead cmd="cat now.md" comment="现在在做" />
       <Terminal title="tomsawyer@blog: ~/now">
         <div class="t-line t-cmd"><span class="t-prompt">$</span><span class="t-cmd-text">cat now.md</span></div>
-        <div class="t-line t-out">- 从零手写这个博客（Astro + 终端风设计系统）</div>
+        <div class="t-line t-out">- 从零手写这个博客(Astro + 终端风设计系统)</div>
         <div class="t-line t-out">- 记录思考和学习过程</div>
         <div class="t-line t-out-accent"># 下一行留给你：正在做的第三件事</div>
         <div class="t-line t-cmd"><span class="t-prompt">$</span><span class="t-cursor"></span></div>
@@ -43,8 +44,8 @@ const PIXEL_ITEMS: { icon: IconName; label: string }[] = [
       <SectionHead cmd="./contact --info" comment="联系方式" />
       <Terminal title="tomsawyer@blog: ~/contact">
         <div class="t-line t-cmd"><span class="t-prompt">$</span><span class="t-cmd-text">cat contact.txt</span></div>
-        <div class="t-line t-out"><span class="contact-key">email</span>  <span class="contact-muted"># 待补充（编辑 src/pages/about.astro）</span></div>
-        <div class="t-line t-out"><span class="contact-key">github</span> <span class="contact-muted"># 待补充</span></div>
+        <div class="t-line t-out"><span class="contact-key">2830888132@qq.com</span></div>
+        <div class="t-line t-out"><span class="contact-key">https://github.com/TomSawyer-rgb</span></div>
         <div class="t-line t-cmd"><span class="t-prompt">$</span><span class="t-cursor"></span></div>
       </Terminal>
     </div>
