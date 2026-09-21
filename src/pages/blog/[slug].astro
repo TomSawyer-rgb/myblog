@@ -148,11 +148,22 @@ const dateStr = d.date.toISOString().slice(0, 10).replace(/-/g, '.');
   .post-content :global(li) {
     margin: 0.3em 0;
   }
+  /* 引用块 = 迷你终端窗口：黑底、等宽、磷光绿左缘（明暗主题下同款） */
   .post-content :global(blockquote) {
-    margin: 1.4em 0;
-    padding: 2px 0 2px 16px;
+    margin: 1.8em 0;
+    padding: 16px 20px;
+    background: var(--term-bg);
+    border: 1px solid var(--term-line);
     border-left: 3px solid var(--accent);
-    color: var(--muted);
+    border-radius: 8px;
+    color: var(--term-text);
+    font-family: var(--font-mono);
+    font-size: 13.5px;
+    line-height: 2.1;
+  }
+  /* 块内多段逐行显示（行距收紧，像终端输出） */
+  .post-content :global(blockquote p) {
+    margin: 0;
   }
   .post-content :global(code) {
     font-family: var(--font-mono);
